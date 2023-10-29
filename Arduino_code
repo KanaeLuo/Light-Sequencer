@@ -1,0 +1,48 @@
+int clock_led = 8;//selecting the output pin of the led used for clock on arduino
+int parttern_led = 2;//selecting the output pin of the led used for entering pattern on arduino
+int parttern[6];//array for storing entered pattern
+
+#define ON 1
+#define OFF 0
+
+void setup() {
+  pinMode(clock_led, OUTPUT);
+  pinMode(parttern_led,OUTPUT);
+  
+  Serial.begin(9600);
+  Serial.println("Enter pattern (1 for on, 0 for off): ");
+  for (int i = 0; i <= 5; i++)
+  {
+    delay(1000);
+    parttern[i] = Serial.parseInt();
+    Serial.println(parttern[i]);  
+  }
+}
+
+int e = 0;//variable for counting how many loops already excuted
+void loop() {
+  //only entering the pattern of sequencers for the first 6 loops
+  if (e < 6)
+  {
+    digitalWrite(clock_led, OFF);
+    digitalWrite(parttern_led, OFF);
+    delay(750);
+    digitalWrite(parttern_led, parttern[e]);
+    digitalWrite(clock_led, OFF);
+    delay(200);
+    digitalWrite(parttern_led, OFF);
+    digitalWrite(clock_led, ON);
+    delay(450);
+    e++;
+  }
+  //after first 6 loops only the LED for clock signal will be working
+  else
+  {
+    digitalWrite(clock_led, 0);
+    digitalWrite(parttern_led, 0);
+    delay(750);
+    digitalWrite(clock_led, 1);
+    digitalWrite(parttern_led, 0);
+    delay(750);
+  }
+}
